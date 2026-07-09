@@ -25,7 +25,14 @@ pnpm -r test
 Fixtures and their expected outputs live in `packages/protocol/fixtures/`
 (`index.json` is the single source of truth for the whole repo).
 
+## Docs
+
+- `docs/PROJECT.md` — roadmap, board, decisions, and active backlog
+- `docs/PLAN.md` — detailed product and architecture plan for device ingestion,
+  storage, and future algorithms
+
 ## Status
 
 Early. Protocol parsing and metric scoring are implemented and tested; the
-React Native app (`apps/*`) is not yet scaffolded.
+mobile app is scaffolded and includes an early dashboard demo, while live device
+connectivity, persistence, and production data flows are still ahead.

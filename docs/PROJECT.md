@@ -4,7 +4,7 @@ Local-first health & recovery companion for iOS + Android (React Native / Expo).
 This is the single source of truth for planning: roadmap, backlog, sprint board,
 done log, and decisions. Keep it updated as work moves.
 
-- **Last updated:** 2026-07-08
+- **Last updated:** 2026-07-09
 - **Repo:** `github.com/sarangp3010/recoup` (private)
 - **Stack:** pnpm workspace · TypeScript (strict) · Vitest · Expo SDK 57 / RN 0.86 / React 19
 
@@ -20,7 +20,8 @@ done log, and decisions. Keep it updated as work moves.
 | BLE connectivity | ⬜ not started |
 | Persistence & sync | ⬜ not started |
 | Health platform writes (HealthKit / Health Connect) | 🟡 dry-run planner only |
-| UI / screens / charts | 🟡 single demo screen |
+| UI / screens / charts | 🟡 early dashboard demo |
+| Product / ingestion planning docs | ✅ detailed v1 plan written |
 | CI / release | ⬜ not started |
 
 Legend: ✅ done · 🟡 partial · ⬜ not started · 🔴 blocked
@@ -40,6 +41,8 @@ Legend: ✅ done · 🟡 partial · ⬜ not started · 🔴 blocked
 - **M4 — Beta** ⬜
   TestFlight / internal Android track, calibration on real data, stability.
 
+See also: [Product and Architecture Plan](</Users/sarang_3010/Documents/Code/recoup/docs/PLAN.md>)
+
 ---
 
 ## Sprint board
@@ -52,10 +55,13 @@ _Nothing in progress — pick from Next._
 - [ ] **REC-12** Add `expo-router` and a tab shell (Today / Trends / Settings) — _M_
 - [ ] **REC-20** BLE spike: evaluate `react-native-ble-plx` vs Expo BLE; connect + notify on the strap's stream UUID — _L_
 - [ ] **REC-21** Wire BLE notifications into `FrameAccumulator` → `parseFrame` → render live HR — _L_
+- [ ] **REC-22** Define adapter boundary for wearable sources (`live BLE`, `vendor API`, `health platform import`) — _M_
+- [ ] **REC-23** Build raw sample ingest contract and local storage schema for sessions + metrics — _L_
 
 ### 🗂️ Backlog (not yet scheduled)
 - [ ] **REC-30** Persistence layer (SQLite / MMKV) for decoded packets + computed metrics — _L_
 - [ ] **REC-31** Sync/session engine: assemble history packets into daily records — _L_
+- [ ] **REC-32** Backend ingest service and database schema for uploaded sample streams — _L_
 - [ ] **REC-40** Recovery / Sleep / Strain / Stress screens backed by `@recoup/algorithms` — _L_
 - [ ] **REC-41** Charts (trends, sparklines) — pick a chart lib compatible with RN — _M_
 - [ ] **REC-50** HealthKit writes for planned candidates (feed `runHealthSyncDryRun` output to real writes) — _L_
@@ -82,6 +88,10 @@ Sizes: _S_ ≈ <½ day · _M_ ≈ 1–2 days · _L_ ≈ 3+ days.
 - [x] **REC-08** Renamed project directory `goose-mobile → recoup`
 - [x] **REC-09** Created private GitHub repo and pushed
 - [x] **REC-10** Scaffolded `apps/mobile` (Expo SDK 57 / RN 0.86 / React 19), wired workspace packages, monorepo Metro config + `.js→.ts` resolver; verified via typecheck and `expo export` (589 modules, no resolution errors)
+
+### 2026-07-09 — Planning & product framing
+- [x] **REC-13** Replaced the mobile placeholder with an early recovery dashboard demo for visual direction
+- [x] **REC-14** Documented the long-term device ingestion, storage, and algorithm plan in `docs/PLAN.md`
 
 ---
 
@@ -128,6 +138,9 @@ A story is Done when:
 
 - **BLE access** — connecting to the strap requires its GATT service/characteristic
   UUIDs and pairing flow; unverified against a live device yet. (blocks M1)
+- **Vendor lock-in** — some third-party wearables expose only a subset of live
+  signals over BLE. Recoup should treat every hardware integration as an adapter,
+  not as the core product model.
 - **Package consumption in RN** — the `.js→.ts` Metro resolver works for `expo export`;
   re-verify on a device build and when adding more packages.
 - **Health writes** — HealthKit/Health Connect require entitlements + permission UX;
